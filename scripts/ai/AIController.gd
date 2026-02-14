@@ -344,7 +344,7 @@ func _try_capture_city(unit: Dictionary, state: GameState) -> void:
 	var def := state.get_unit_def(unit["type"])
 	if not def.get("can_capture", false):
 		return
-	var city := state.get_city_at(unit["x"], unit["y"])
+	var city = state.get_city_at(unit["x"], unit["y"])
 	if city == null:
 		return
 	if city["owner"] == unit["owner"]:

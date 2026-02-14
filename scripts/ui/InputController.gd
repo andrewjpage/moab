@@ -98,17 +98,13 @@ func _handle_tap(screen_pos: Vector2) -> void:
 	if grid_renderer == null or camera == null:
 		return
 
-	# Convert screen position to world position
+	# Convert screen position to world position via canvas transform
 	var viewport := grid_renderer.get_viewport()
 	if viewport == null:
 		return
-	var world_pos := camera.get_global_mouse_position()
-	var tile_pos := grid_renderer.world_to_tile(grid_renderer.to_global(Vector2.ZERO) + world_pos - camera.get_screen_center_position() + Vector2(camera.get_viewport_rect().size / 2.0))
-
-	# Recalculate using camera transform
 	var canvas_transform := viewport.get_canvas_transform()
 	var global_pos := canvas_transform.affine_inverse() * screen_pos
-	tile_pos = Vector2i(int(floor(global_pos.x / GridRenderer.TILE_SIZE)), int(floor(global_pos.y / GridRenderer.TILE_SIZE)))
+	var tile_pos := Vector2i(int(floor(global_pos.x / GridRenderer.TILE_SIZE)), int(floor(global_pos.y / GridRenderer.TILE_SIZE)))
 
 	if not game_state.in_bounds(tile_pos.x, tile_pos.y):
 		return

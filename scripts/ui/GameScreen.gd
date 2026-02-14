@@ -22,6 +22,8 @@ var camera: Camera2D = null
 var status_label: Label = null
 var notification_label: Label = null
 var notification_timer: float = 0.0
+var ui_layer: CanvasLayer = null
+var ui_root: Control = null
 
 # State
 var selected_unit: Dictionary = {}
@@ -72,6 +74,7 @@ func start_new_game(config: Dictionary) -> void:
 	var events := turn_system.start_turn(game_state, fog_system)
 	_process_events(events)
 	_update_status()
+	grid_renderer.queue_redraw()
 
 
 func load_saved_game(save_data: Dictionary) -> void:
@@ -90,6 +93,7 @@ func _build_ui() -> void:
 	camera = Camera2D.new()
 	camera.zoom = Vector2(zoom_level, zoom_level)
 	add_child(camera)
+	camera.make_current()
 
 	# Grid renderer (world-space)
 	grid_renderer = GridRenderer.new()
@@ -105,6 +109,15 @@ func _build_ui() -> void:
 	input_controller.pan_changed.connect(_on_pan)
 	input_controller.zoom_changed.connect(_on_zoom)
 
+	# CanvasLayer for UI (stays fixed regardless of camera transform)
+	ui_layer = CanvasLayer.new()
+	ui_layer.layer = 10
+	add_child(ui_layer)
+	ui_root = Control.new()
+	ui_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	ui_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ui_layer.add_child(ui_root)
+
 	# Status bar (top)
 	status_label = Label.new()
 	status_label.set_anchors_preset(Control.PRESET_TOP_WIDE)
@@ -115,11 +128,12 @@ func _build_ui() -> void:
 	var status_bg := PanelContainer.new()
 	status_bg.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	status_bg.offset_bottom = 32
+	status_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var status_style := StyleBoxFlat.new()
 	status_style.bg_color = Color(0.1, 0.1, 0.12, 0.85)
 	status_bg.add_theme_stylebox_override("panel", status_style)
-	add_child(status_bg)
-	add_child(status_label)
+	ui_root.add_child(status_bg)
+	ui_root.add_child(status_label)
 
 	# Notification label (center)
 	notification_label = Label.new()
@@ -127,7 +141,7 @@ func _build_ui() -> void:
 	notification_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	notification_label.add_theme_font_size_override("font_size", 24)
 	notification_label.visible = false
-	add_child(notification_label)
+	ui_root.add_child(notification_label)
 
 	# Inspect panel (right side)
 	var inspect_script := load("res://scripts/ui/InspectPanel.gd")
@@ -137,14 +151,14 @@ func _build_ui() -> void:
 	inspect_panel.offset_left = -230
 	inspect_panel.offset_top = 40
 	inspect_panel.offset_bottom = -70
-	add_child(inspect_panel)
+	ui_root.add_child(inspect_panel)
 
 	# City panel (center)
 	var city_script := load("res://scripts/ui/CityPanel.gd")
 	city_panel = PanelContainer.new()
 	city_panel.set_script(city_script)
 	city_panel.set_anchors_preset(Control.PRESET_CENTER)
-	add_child(city_panel)
+	ui_root.add_child(city_panel)
 	city_panel.production_selected.connect(_on_production_selected)
 
 	# Action bar (bottom)
@@ -156,11 +170,12 @@ func _build_ui() -> void:
 	var bar_bg := PanelContainer.new()
 	bar_bg.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	bar_bg.offset_top = -60
+	bar_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var bar_style := StyleBoxFlat.new()
 	bar_style.bg_color = Color(0.1, 0.1, 0.12, 0.85)
 	bar_bg.add_theme_stylebox_override("panel", bar_style)
-	add_child(bar_bg)
-	add_child(action_bar)
+	ui_root.add_child(bar_bg)
+	ui_root.add_child(action_bar)
 
 	# Connect action bar signals (deferred to allow _ready to complete)
 	call_deferred("_connect_action_bar")

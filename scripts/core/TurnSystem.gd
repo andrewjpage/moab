@@ -14,7 +14,7 @@ func start_turn(state: GameState, fog: FogSystem) -> Array:
 		unit["has_acted"] = false
 		# Refuel air units at friendly cities
 		if def["domain"] == "AIR" and unit["fuel_remaining"] != null:
-			var city := state.get_city_at(unit["x"], unit["y"])
+			var city = state.get_city_at(unit["x"], unit["y"])
 			if city != null and city["owner"] == pid:
 				unit["fuel_remaining"] = def["fuel"]
 
@@ -23,7 +23,7 @@ func start_turn(state: GameState, fog: FogSystem) -> Array:
 		if city["production_queue"] != "" and city["production_days_left"] > 0:
 			city["production_days_left"] -= 1
 			if city["production_days_left"] <= 0:
-				var spawned := _spawn_produced_unit(state, city)
+				var spawned = _spawn_produced_unit(state, city)
 				if spawned:
 					events.append({
 						"type": "unit_spawned",
@@ -38,7 +38,7 @@ func start_turn(state: GameState, fog: FogSystem) -> Array:
 	# 3. Repair units in friendly cities
 	var repair_amount: int = state.rules.get("repair_amount", 2)
 	for unit in state.get_player_units(pid):
-		var city := state.get_city_at(unit["x"], unit["y"])
+		var city = state.get_city_at(unit["x"], unit["y"])
 		if city != null and city["owner"] == pid:
 			var def := state.get_unit_def(unit["type"])
 			var max_hp: int = int(def["hp"])
@@ -68,7 +68,7 @@ func end_turn(state: GameState, fog: FogSystem) -> Array:
 		var def := state.get_unit_def(unit["type"])
 		if def["domain"] == "AIR" and unit["fuel_remaining"] != null:
 			if int(unit["fuel_remaining"]) <= 0:
-				var city := state.get_city_at(unit["x"], unit["y"])
+				var city = state.get_city_at(unit["x"], unit["y"])
 				if city == null or city["owner"] != pid:
 					to_remove.append(unit["id"])
 					events.append({

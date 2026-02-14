@@ -28,7 +28,7 @@ func generate_map(width: int, height: int, rng: RandomNumberGenerator, num_citie
 				land_tiles.append(Vector2i(x, y))
 
 	var num_mountains := int(land_tiles.size() * rng.randf_range(0.10, 0.15))
-	land_tiles.shuffle()
+	_shuffle_with_rng(land_tiles, rng)
 	for i in range(mini(num_mountains, land_tiles.size())):
 		var pos: Vector2i = land_tiles[i]
 		terrain[pos.y * width + pos.x] = GameState.Terrain.MOUNTAIN
@@ -170,6 +170,14 @@ func _find_land_near(terrain: Array, w: int, h: int, center: Vector2i, rng: Rand
 func _generate_city_name(rng: RandomNumberGenerator, idx: int) -> String:
 	var prefixes := ["Fort", "Port", "New", "East", "West", "North", "South", "Iron", "Storm", "Silver"]
 	var suffixes := ["haven", "watch", "hold", "gate", "ridge", "bay", "peak", "ford", "vale", "rock"]
-	var p := prefixes[rng.randi_range(0, prefixes.size() - 1)]
-	var s := suffixes[rng.randi_range(0, suffixes.size() - 1)]
+	var p: String = prefixes[rng.randi_range(0, prefixes.size() - 1)]
+	var s: String = suffixes[rng.randi_range(0, suffixes.size() - 1)]
 	return p + " " + s.capitalize()
+
+
+func _shuffle_with_rng(arr: Array, rng: RandomNumberGenerator) -> void:
+	for i in range(arr.size() - 1, 0, -1):
+		var j := rng.randi_range(0, i)
+		var tmp = arr[i]
+		arr[i] = arr[j]
+		arr[j] = tmp
