@@ -109,7 +109,7 @@ func _draw() -> void:
 
 			# City marker
 			if t == GameState.Terrain.CITY:
-				var city := game_state.get_city_at(x, y)
+				var city = game_state.get_city_at(x, y)
 				if city != null:
 					var city_color: Color
 					if city["owner"] == -1:

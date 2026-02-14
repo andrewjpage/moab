@@ -1,0 +1,9 @@
+# Godot generated
+.godot/
+
+# Build outputs
+build/
+
+# OS files
+.DS_Store
+Thumbs.db

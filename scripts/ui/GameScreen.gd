@@ -205,7 +205,7 @@ func _on_tile_selected(pos: Vector2i) -> void:
 		inspect_panel.show_tile_info(pos.x, pos.y, game_state)
 
 	# Check for city - show city panel
-	var city := game_state.get_city_at(pos.x, pos.y)
+	var city = game_state.get_city_at(pos.x, pos.y)
 	if city != null and city["owner"] == game_state.current_player:
 		if city_panel:
 			city_panel.show_city(city, game_state)
@@ -233,7 +233,7 @@ func _on_unit_selected(unit: Dictionary) -> void:
 
 
 func _on_move_requested(unit_id: int, target: Vector2i) -> void:
-	var unit := game_state.get_unit_by_id(unit_id)
+	var unit = game_state.get_unit_by_id(unit_id)
 	if unit == null:
 		return
 
@@ -265,7 +265,7 @@ func _on_move_requested(unit_id: int, target: Vector2i) -> void:
 
 	# Try capture city
 	if def.get("can_capture", false):
-		var city := game_state.get_city_at(target.x, target.y)
+		var city = game_state.get_city_at(target.x, target.y)
 		if city != null and city["owner"] != unit["owner"]:
 			city["owner"] = unit["owner"]
 			city["production_queue"] = ""
@@ -285,7 +285,7 @@ func _on_move_requested(unit_id: int, target: Vector2i) -> void:
 
 
 func _on_attack_requested(unit_id: int, target: Vector2i) -> void:
-	var unit := game_state.get_unit_by_id(unit_id)
+	var unit = game_state.get_unit_by_id(unit_id)
 	if unit == null:
 		return
 
@@ -373,8 +373,8 @@ func _on_action_load() -> void:
 
 	# Find adjacent friendly infantry/airborne to load
 	for dir in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-		var nx := transport["x"] + dir.x
-		var ny := transport["y"] + dir.y
+		var nx: int = transport["x"] + dir.x
+		var ny: int = transport["y"] + dir.y
 		var units := game_state.get_friendly_units_at(nx, ny, transport["owner"])
 		for u in units:
 			var udef := game_state.get_unit_def(u["type"])
@@ -403,8 +403,8 @@ func _on_action_unload() -> void:
 
 	# Find adjacent land tile to unload
 	for dir in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-		var nx := transport["x"] + dir.x
-		var ny := transport["y"] + dir.y
+		var nx: int = transport["x"] + dir.x
+		var ny: int = transport["y"] + dir.y
 		if not game_state.in_bounds(nx, ny):
 			continue
 		var t := game_state.get_terrain(nx, ny)

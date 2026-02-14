@@ -37,7 +37,7 @@ func find_path(state: GameState, unit: Dictionary, from: Vector2i, to: Vector2i)
 		open_set.erase(current)
 
 		for dir in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-			var neighbor := current + dir
+			var neighbor: Vector2i = current + dir
 			if not state.in_bounds(neighbor.x, neighbor.y):
 				continue
 			if not state.can_unit_enter(unit, neighbor.x, neighbor.y):
@@ -84,7 +84,7 @@ func get_reachable_tiles(state: GameState, unit: Dictionary) -> Array:
 			result.append(pos)
 
 		for dir in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-			var next_pos := pos + dir
+			var next_pos: Vector2i = pos + dir
 			if not state.in_bounds(next_pos.x, next_pos.y):
 				continue
 			if not state.can_unit_enter(unit, next_pos.x, next_pos.y):
@@ -144,8 +144,8 @@ func get_attackable_targets(state: GameState, unit: Dictionary) -> Array:
 			for dx in range(-mp, mp + 1):
 				if maxi(absi(dx), absi(dy)) > mp:
 					continue
-				var tx := unit["x"] + dx
-				var ty := unit["y"] + dy
+				var tx: int = unit["x"] + dx
+				var ty: int = unit["y"] + dy
 				if not state.in_bounds(tx, ty):
 					continue
 				var enemies := state.get_enemy_units_at(tx, ty, unit["owner"])
@@ -156,8 +156,8 @@ func get_attackable_targets(state: GameState, unit: Dictionary) -> Array:
 	# LAND/SEA: adjacent enemy units (4-directional)
 	if domain == "LAND" or domain == "SEA":
 		for dir in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-			var tx := unit["x"] + dir.x
-			var ty := unit["y"] + dir.y
+			var tx: int = unit["x"] + dir.x
+			var ty: int = unit["y"] + dir.y
 			if not state.in_bounds(tx, ty):
 				continue
 			var enemies := state.get_enemy_units_at(tx, ty, unit["owner"])
@@ -168,8 +168,8 @@ func get_attackable_targets(state: GameState, unit: Dictionary) -> Array:
 	if domain == "AIR":
 		for dy in range(-1, 2):
 			for dx in range(-1, 2):
-				var tx := unit["x"] + dx
-				var ty := unit["y"] + dy
+				var tx: int = unit["x"] + dx
+				var ty: int = unit["y"] + dy
 				if not state.in_bounds(tx, ty):
 					continue
 				var enemies := state.get_enemy_units_at(tx, ty, unit["owner"])

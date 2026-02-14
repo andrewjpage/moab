@@ -122,8 +122,8 @@ func _spawn_produced_unit(state: GameState, city: Dictionary):
 	# Try adjacent tiles
 	for dir in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1),
 				Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]:
-		var nx := cx + dir.x
-		var ny := cy + dir.y
+		var nx: int = cx + dir.x
+		var ny: int = cy + dir.y
 		if not state.in_bounds(nx, ny):
 			continue
 		# Check if unit can enter this terrain

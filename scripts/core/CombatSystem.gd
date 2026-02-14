@@ -61,9 +61,9 @@ func resolve_bomber_aoe(state: GameState, bomber: Dictionary, target_x: int, tar
 
 	# Find all units in AoE radius (Chebyshev distance)
 	for unit in state.units.duplicate():
-		var dx := absi(unit["x"] - target_x)
-		var dy := absi(unit["y"] - target_y)
-		var dist := maxi(dx, dy)
+		var dx: int = absi(unit["x"] - target_x)
+		var dy: int = absi(unit["y"] - target_y)
+		var dist: int = maxi(dx, dy)
 		if dist > aoe_radius:
 			continue
 		if unit["id"] == bomber["id"]:
@@ -120,20 +120,20 @@ func can_attack(state: GameState, attacker: Dictionary, target_x: int, target_y:
 
 	# Bomber uses AoE - can attack within movement range
 	if "aoe_attack" in atk_def.get("special", []):
-		var dx := absi(attacker["x"] - target_x)
-		var dy := absi(attacker["y"] - target_y)
+		var dx: int = absi(attacker["x"] - target_x)
+		var dy: int = absi(attacker["y"] - target_y)
 		return maxi(dx, dy) <= attacker["mp_remaining"]
 
 	# LAND/SEA: must be adjacent
 	if domain == "LAND" or domain == "SEA":
-		var dx := absi(attacker["x"] - target_x)
-		var dy := absi(attacker["y"] - target_y)
+		var dx: int = absi(attacker["x"] - target_x)
+		var dy: int = absi(attacker["y"] - target_y)
 		return (dx + dy) == 1
 
 	# AIR: adjacent
 	if domain == "AIR":
-		var dx := absi(attacker["x"] - target_x)
-		var dy := absi(attacker["y"] - target_y)
+		var dx: int = absi(attacker["x"] - target_x)
+		var dy: int = absi(attacker["y"] - target_y)
 		return maxi(dx, dy) <= 1
 
 	return false
@@ -154,8 +154,8 @@ func get_attackable_targets(state: GameState, unit: Dictionary) -> Array:
 			for dx in range(-mp, mp + 1):
 				if maxi(absi(dx), absi(dy)) > mp:
 					continue
-				var tx := unit["x"] + dx
-				var ty := unit["y"] + dy
+				var tx: int = unit["x"] + dx
+				var ty: int = unit["y"] + dy
 				if not state.in_bounds(tx, ty):
 					continue
 				var enemies := state.get_enemy_units_at(tx, ty, unit["owner"])
@@ -165,8 +165,8 @@ func get_attackable_targets(state: GameState, unit: Dictionary) -> Array:
 
 	# Standard attack: adjacent tiles with enemies
 	for dir in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-		var tx := unit["x"] + dir.x
-		var ty := unit["y"] + dir.y
+		var tx: int = unit["x"] + dir.x
+		var ty: int = unit["y"] + dir.y
 		if not state.in_bounds(tx, ty):
 			continue
 		var enemies := state.get_enemy_units_at(tx, ty, unit["owner"])
@@ -176,8 +176,8 @@ func get_attackable_targets(state: GameState, unit: Dictionary) -> Array:
 	# AIR: also diagonals
 	if domain == "AIR":
 		for dir in [Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]:
-			var tx := unit["x"] + dir.x
-			var ty := unit["y"] + dir.y
+			var tx: int = unit["x"] + dir.x
+			var ty: int = unit["y"] + dir.y
 			if not state.in_bounds(tx, ty):
 				continue
 			var enemies := state.get_enemy_units_at(tx, ty, unit["owner"])
@@ -200,6 +200,6 @@ func _can_counter(atk_def: Dictionary, def_def: Dictionary, attacker: Dictionary
 		if def_def["domain"] != "AIR" or atk_def["domain"] != "AIR":
 			return false
 	# Must be adjacent
-	var dx := absi(attacker["x"] - defender["x"])
-	var dy := absi(attacker["y"] - defender["y"])
+	var dx: int = absi(attacker["x"] - defender["x"])
+	var dy: int = absi(attacker["y"] - defender["y"])
 	return (dx + dy) <= 1 or (def_def["domain"] == "AIR" and maxi(dx, dy) <= 1)

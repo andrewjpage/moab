@@ -53,8 +53,8 @@ func generate_map(width: int, height: int, rng: RandomNumberGenerator, num_citie
 			continue
 		var too_close := false
 		for existing in city_positions:
-			var dx := absi(x - existing.x)
-			var dy := absi(y - existing.y)
+			var dx: int = absi(x - existing.x)
+			var dy: int = absi(y - existing.y)
 			if dx + dy < min_dist:
 				too_close = true
 				break
@@ -145,7 +145,7 @@ func _grow_blob(terrain: Array, w: int, h: int, center: Vector2i, size: int, rng
 		placed += 1
 
 		for dir in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-			var next := pos + dir
+			var next: Vector2i = pos + dir
 			if not visited.has(next):
 				frontier.append(next)
 

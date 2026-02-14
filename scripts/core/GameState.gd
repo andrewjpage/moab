@@ -189,8 +189,8 @@ func is_port_city(city: Dictionary) -> bool:
 	var cx: int = city["x"]
 	var cy: int = city["y"]
 	for dir in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-		var nx := cx + dir.x
-		var ny := cy + dir.y
+		var nx: int = cx + dir.x
+		var ny: int = cy + dir.y
 		if in_bounds(nx, ny) and get_terrain(nx, ny) == Terrain.SEA:
 			return true
 	return false
@@ -286,7 +286,7 @@ func get_movement_range(unit: Dictionary) -> Array:
 			result.append(pos)
 
 		for dir in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-			var next_pos := pos + dir
+			var next_pos: Vector2i = pos + dir
 			if not in_bounds(next_pos.x, next_pos.y):
 				continue
 			if not can_unit_enter(unit, next_pos.x, next_pos.y):

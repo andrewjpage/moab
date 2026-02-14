@@ -163,8 +163,8 @@ func _find_defense_position(unit: Dictionary, state: GameState) -> Vector2i:
 		for enemy_unit in state.units:
 			if enemy_unit["owner"] == pid:
 				continue
-			var dx := absi(enemy_unit["x"] - city["x"])
-			var dy := absi(enemy_unit["y"] - city["y"])
+			var dx: int = absi(enemy_unit["x"] - city["x"])
+			var dy: int = absi(enemy_unit["y"] - city["y"])
 			if dx + dy <= 4:
 				threatened = true
 				break
@@ -204,7 +204,7 @@ func _find_sea_objective(unit: Dictionary, state: GameState) -> Vector2i:
 			continue
 		var edef := state.get_unit_def(enemy["type"])
 		if edef["domain"] == "SEA":
-			var dist := absi(unit["x"] - enemy["x"]) + absi(unit["y"] - enemy["y"])
+			var dist: int = absi(unit["x"] - enemy["x"]) + absi(unit["y"] - enemy["y"])
 			if dist < best_dist:
 				best_dist = dist
 				best_target = Vector2i(enemy["x"], enemy["y"])
@@ -223,7 +223,7 @@ func _find_air_objective(unit: Dictionary, state: GameState) -> Vector2i:
 		var fuel: int = int(unit["fuel_remaining"])
 		var nearest_base := _find_nearest_friendly_city(unit, state)
 		if nearest_base != Vector2i(-1, -1):
-			var dist_to_base := absi(unit["x"] - nearest_base.x) + absi(unit["y"] - nearest_base.y)
+			var dist_to_base: int = absi(unit["x"] - nearest_base.x) + absi(unit["y"] - nearest_base.y)
 			if fuel <= dist_to_base + 2:
 				return _get_step_toward(unit, nearest_base, state)
 
@@ -234,7 +234,7 @@ func _find_air_objective(unit: Dictionary, state: GameState) -> Vector2i:
 	for enemy in state.units:
 		if enemy["owner"] == pid:
 			continue
-		var dist := absi(unit["x"] - enemy["x"]) + absi(unit["y"] - enemy["y"])
+		var dist: int = absi(unit["x"] - enemy["x"]) + absi(unit["y"] - enemy["y"])
 		if dist < best_dist:
 			best_dist = dist
 			best_target = Vector2i(enemy["x"], enemy["y"])
@@ -250,7 +250,7 @@ func _find_nearest_friendly_city(unit: Dictionary, state: GameState) -> Vector2i
 	var best_pos := Vector2i(-1, -1)
 
 	for city in state.get_player_cities(pid):
-		var dist := absi(unit["x"] - city["x"]) + absi(unit["y"] - city["y"])
+		var dist: int = absi(unit["x"] - city["x"]) + absi(unit["y"] - city["y"])
 		if dist < best_dist:
 			best_dist = dist
 			best_pos = Vector2i(city["x"], city["y"])
@@ -289,8 +289,8 @@ func _would_hit_own_units(bomber: Dictionary, target: Vector2i, state: GameState
 			continue
 		if unit["id"] == bomber["id"]:
 			continue
-		var dx := absi(unit["x"] - target.x)
-		var dy := absi(unit["y"] - target.y)
+		var dx: int = absi(unit["x"] - target.x)
+		var dy: int = absi(unit["y"] - target.y)
 		if maxi(dx, dy) <= radius:
 			return true
 
@@ -300,8 +300,8 @@ func _would_hit_own_units(bomber: Dictionary, target: Vector2i, state: GameState
 func _execute_move(unit: Dictionary, target: Vector2i, state: GameState, fog: FogSystem) -> void:
 	if target == Vector2i(-1, -1):
 		return
-	var old_x := unit["x"]
-	var old_y := unit["y"]
+	var old_x: int = unit["x"]
+	var old_y: int = unit["y"]
 	var cost := state.get_move_cost(unit, target.x, target.y)
 	var path := pathfinding.find_path(state, unit, Vector2i(old_x, old_y), target)
 	var total_cost := 0
