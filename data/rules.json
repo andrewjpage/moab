@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "victory_city_percentage": 60,
+  "repair_amount": 2,
+  "terrain_defense_bonus": {
+    "MOUNTAIN": 1,
+    "CITY": 1
+  },
+  "bomber_primary_bonus_damage": 2,
+  "min_damage": 1,
+  "default_map_size": 30,
+  "max_players": 2,
+  "fog_states": {
+    "UNSEEN": 0,
+    "SEEN_NOT_VISIBLE": 1,
+    "VISIBLE": 2
+  }
+}
