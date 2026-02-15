@@ -54,7 +54,17 @@ func start_new_game(config: Dictionary) -> void:
 		var map_size: int = config.get("map_size", 30)
 		map_data = map_generator.generate_map(map_size, map_size, rng)
 
+	if map_data.is_empty():
+		_show_notification("Failed to load map data")
+		return
+	if not map_data.has_all(["width", "height", "terrain", "cities"]):
+		_show_notification("Invalid map data")
+		return
+
 	game_state.init_from_map_data(map_data, config["seed"])
+	if game_state.cities.is_empty():
+		_show_notification("Map has no cities")
+		return
 	game_state.players[1]["ai_difficulty"] = config["ai_difficulty"]
 
 	fog_system.init_fog(game_state)

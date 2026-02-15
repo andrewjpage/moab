@@ -35,7 +35,16 @@ func load_game(slot: String = "slot1") -> Dictionary:
 	if err != OK:
 		push_error("Failed to parse save file: " + path)
 		return {}
+	if typeof(json.data) != TYPE_DICTIONARY:
+		push_error("Invalid save format: " + path)
+		return {}
 	var data: Dictionary = json.data
+	if not data.has("state") or not data.has("fog"):
+		push_error("Save file missing required fields: " + path)
+		return {}
+	if typeof(data["state"]) != TYPE_DICTIONARY or typeof(data["fog"]) != TYPE_DICTIONARY:
+		push_error("Save file has invalid state/fog payload: " + path)
+		return {}
 	if data.get("schema_version", 0) != SCHEMA_VERSION:
 		push_warning("Save schema version mismatch")
 	return {
@@ -87,8 +96,12 @@ func _get_save_metadata(slot: String) -> Dictionary:
 	file.close()
 	if err != OK:
 		return {"slot": slot, "day": 0, "date": "unknown"}
+	if typeof(json.data) != TYPE_DICTIONARY:
+		return {"slot": slot, "day": 0, "date": "unknown"}
 	var data: Dictionary = json.data
-	var state_data: Dictionary = data.get("state", {})
+	var state_data = data.get("state", {})
+	if typeof(state_data) != TYPE_DICTIONARY:
+		state_data = {}
 	return {
 		"slot": slot,
 		"day": state_data.get("day", 0),

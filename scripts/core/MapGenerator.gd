@@ -118,8 +118,12 @@ func load_map_from_json(path: String) -> Dictionary:
 		return {}
 	var json := JSON.new()
 	var err := json.parse(file.get_as_text())
+	file.close()
 	if err != OK:
 		push_error("Failed to parse map JSON: " + path)
+		return {}
+	if typeof(json.data) != TYPE_DICTIONARY:
+		push_error("Map JSON root must be a dictionary: " + path)
 		return {}
 	return json.data
 
