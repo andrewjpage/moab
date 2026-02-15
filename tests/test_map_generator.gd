@@ -109,3 +109,26 @@ func test_load_map_from_json() -> void:
 	assert_true(data.has("terrain"), "loaded map should have terrain")
 	assert_true(data.has("cities"), "loaded map should have cities")
 	assert_gt(data["cities"].size(), 0, "loaded map should have cities")
+
+
+func test_load_map_from_json_missing_file_returns_empty() -> void:
+	set_test_name("test_load_map_from_json_missing_file_returns_empty")
+	var mg := MapGenerator.new()
+	var data := mg.load_map_from_json("res://data/maps/does_not_exist.json")
+	assert_true(data.is_empty(), "missing file should return empty dictionary")
+
+
+func test_load_map_from_json_rejects_non_dictionary_root() -> void:
+	set_test_name("test_load_map_from_json_rejects_non_dictionary_root")
+	var mg := MapGenerator.new()
+	var temp_path := "user://map_invalid_root.json"
+	var file := FileAccess.open(temp_path, FileAccess.WRITE)
+	assert_not_null(file, "temp map should be writable")
+	if file == null:
+		return
+	file.store_string("[1,2,3]")
+	file.close()
+
+	var data := mg.load_map_from_json(temp_path)
+	assert_true(data.is_empty(), "array root should be rejected")
+	DirAccess.remove_absolute(temp_path)

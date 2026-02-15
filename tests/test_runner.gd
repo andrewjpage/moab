@@ -15,6 +15,7 @@ func _init() -> void:
 		["test_map_generator", preload("res://tests/test_map_generator.gd")],
 		["test_pathfinding", preload("res://tests/test_pathfinding.gd")],
 		["test_ai_controller", preload("res://tests/test_ai_controller.gd")],
+		["test_save_system", preload("res://tests/test_save_system.gd")],
 		["test_integration", preload("res://tests/test_integration.gd")],
 	]
 
